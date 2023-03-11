@@ -74,6 +74,4 @@ export const gallerySlice = createSlice({
   extraReducers,
 });
 
-export const {} = gallerySlice.actions;
-
 export default gallerySlice.reducer;
