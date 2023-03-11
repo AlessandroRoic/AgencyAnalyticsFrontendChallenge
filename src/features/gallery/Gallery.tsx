@@ -1,15 +1,9 @@
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import {
-  fetchImages,
-  GalleryImagesStatus,
-  getImages,
-  getStatus,
-} from "./gallerySlice";
+import { fetchImages, getImages } from "./gallerySlice";
 import { useEffect } from "react";
 
 const Gallery = () => {
   const images = useAppSelector(getImages);
-  const imageStatus = useAppSelector(getStatus);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -18,7 +12,7 @@ const Gallery = () => {
     return () => {
       promise.abort();
     };
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     console.log(images);
