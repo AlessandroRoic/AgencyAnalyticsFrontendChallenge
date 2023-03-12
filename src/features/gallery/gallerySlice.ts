@@ -1,8 +1,13 @@
-import {ActionReducerMapBuilder, createAsyncThunk, createSlice,} from "@reduxjs/toolkit";
-import {GalleryImage} from "./models/GalleryImage.interface";
+import {
+  ActionReducerMapBuilder,
+  createAsyncThunk,
+  createSlice,
+  PayloadAction,
+} from "@reduxjs/toolkit";
+import { GalleryImage } from "./models/GalleryImage.interface";
 import GalleryAPI from "./GalleryAPI";
-import {NoInfer} from "react-redux";
-import {RootState} from "../../app/store";
+import { NoInfer } from "react-redux";
+import { RootState } from "../../app/store";
 
 export enum GalleryImagesStatus {
   LOADING,
@@ -15,6 +20,7 @@ export interface GalleryState {
   imagesStatus: GalleryImagesStatus;
   images: GalleryImage[];
   selectedImage: GalleryImage | null;
+  selectedImageId: string;
   selectedTab: GalleryTab;
 }
 
@@ -27,12 +33,21 @@ const initialState: GalleryState = {
   imagesStatus: GalleryImagesStatus.IDLE,
   images: [],
   selectedImage: null,
+  selectedImageId: "",
   selectedTab: GalleryTab.RECENT,
 };
 
 // REDUCERS
 
-const reducers = {};
+const reducers = {
+  setSelectedImage: (
+    state: GalleryState,
+    action: PayloadAction<GalleryImage>
+  ) => {
+    state.selectedImage = action.payload;
+    state.selectedImageId = action.payload.id;
+  },
+};
 
 export const fetchImages = createAsyncThunk(
   "gallery/fetchImages",
@@ -61,10 +76,16 @@ const extraReducers = (
 // SELECTORS
 
 export const getImages = (state: RootState): GalleryImage[] =>
-    state.gallery.images;
+  state.gallery.images;
 
 export const getStatus = (state: RootState): GalleryImagesStatus =>
-    state.gallery.imagesStatus;
+  state.gallery.imagesStatus;
+
+export const getSelectedImage = (state: RootState): GalleryImage | null =>
+  state.gallery.selectedImage;
+
+export const getSelectedImageId = (state: RootState): string =>
+  state.gallery.selectedImageId;
 
 // SETUP
 export const gallerySlice = createSlice({
@@ -75,3 +96,5 @@ export const gallerySlice = createSlice({
 });
 
 export default gallerySlice.reducer;
+
+export const { setSelectedImage } = gallerySlice.actions;
