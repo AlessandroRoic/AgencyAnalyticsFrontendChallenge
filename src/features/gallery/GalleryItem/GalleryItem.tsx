@@ -1,6 +1,4 @@
-import { useAppDispatch } from "../../../app/storeHooks";
 import useByteParser from "../../../hooks/useByteParser";
-import { setSelectedImage } from "../gallerySlice";
 import {
   ItemDd,
   ItemDl,
