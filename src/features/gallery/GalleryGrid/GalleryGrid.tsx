@@ -1,27 +1,17 @@
-import { useMemo, useEffect, useCallback } from "react";
-import { useAppSelector, useAppDispatch } from "../../../app/storeHooks";
+import { useCallback } from "react";
+import { useAppDispatch, useAppSelector } from "../../../app/storeHooks";
 import GalleryItem from "../GalleryItem";
-import {
-  getImages,
-  getStatus,
-  GalleryImagesStatus,
-  fetchImages,
-  setSelectedImage,
-  getSelectedImageId,
-} from "../gallerySlice";
+import { getSelectedImageId, setSelectedImage } from "../gallerySlice";
+import { GalleryImage } from "../models/GalleryImage.interface";
 import { GridArticle } from "./GalleryGrid.styles";
 
-const GalleryGrid = () => {
-  const images = useAppSelector(getImages);
-  const dispatch = useAppDispatch();
-  const imagesServiceStatus = useAppSelector(getStatus);
-  const selectedImageId = useAppSelector(getSelectedImageId);
+interface GalleryGridProps {
+  images: GalleryImage[];
+}
 
-  const isLoading = useMemo(
-    () =>
-      imagesServiceStatus === GalleryImagesStatus.LOADING || images.length < 0,
-    [images, imagesServiceStatus]
-  );
+const GalleryGrid = ({ images }: GalleryGridProps) => {
+  const selectedImageId = useAppSelector(getSelectedImageId);
+  const dispatch = useAppDispatch();
 
   const isImageSelected = useCallback(
     (imageToCheckId: string) => {
@@ -30,15 +20,7 @@ const GalleryGrid = () => {
     [selectedImageId]
   );
 
-  useEffect(() => {
-    const promise = dispatch(fetchImages());
-
-    return () => {
-      promise.abort();
-    };
-  }, [dispatch]);
-
-  return isLoading ? (
+  return images.length < 0 ? (
     <section>Loading</section>
   ) : (
     <GridArticle>
