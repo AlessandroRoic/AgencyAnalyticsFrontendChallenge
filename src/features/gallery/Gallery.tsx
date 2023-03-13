@@ -1,10 +1,9 @@
-import GalleryGrid from "./GalleryGrid/GalleryGrid";
+import ImageGallery from "./ImageGallery/ImageGallery";
 
 const Gallery = () => {
   return (
     <main>
-      <h1>Photos</h1>
-      <GalleryGrid />
+      <ImageGallery />
     </main>
   );
 };

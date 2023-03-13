@@ -4,10 +4,10 @@ import {
   createSlice,
   PayloadAction,
 } from "@reduxjs/toolkit";
-import { GalleryImage } from "./models/GalleryImage.interface";
-import GalleryAPI from "./GalleryAPI";
 import { NoInfer } from "react-redux";
 import { RootState } from "../../app/store";
+import GalleryAPI from "./GalleryAPI";
+import { GalleryImage } from "./models/GalleryImage.interface";
 
 export enum GalleryImagesStatus {
   LOADING,
@@ -19,12 +19,13 @@ export enum GalleryImagesStatus {
 export interface GalleryState {
   imagesStatus: GalleryImagesStatus;
   images: GalleryImage[];
+  favouriteImages: GalleryImage[];
   selectedImage: GalleryImage | null;
   selectedImageId: string;
-  selectedTab: GalleryTab;
+  selectedTab: GalleryTabEnum;
 }
 
-export enum GalleryTab {
+export enum GalleryTabEnum {
   RECENT,
   FAVOURITE,
 }
@@ -32,9 +33,10 @@ export enum GalleryTab {
 const initialState: GalleryState = {
   imagesStatus: GalleryImagesStatus.IDLE,
   images: [],
+  favouriteImages: [],
   selectedImage: null,
   selectedImageId: "",
-  selectedTab: GalleryTab.RECENT,
+  selectedTab: GalleryTabEnum.RECENT,
 };
 
 // REDUCERS
@@ -46,6 +48,12 @@ const reducers = {
   ) => {
     state.selectedImage = action.payload;
     state.selectedImageId = action.payload.id;
+  },
+  setSelectedTab: (
+    state: GalleryState,
+    action: PayloadAction<GalleryTabEnum>
+  ) => {
+    state.selectedTab = action.payload;
   },
 };
 
@@ -65,7 +73,11 @@ const extraReducers = (
     })
     .addCase(fetchImages.fulfilled, (state, action) => {
       state.imagesStatus = GalleryImagesStatus.FULLFILLED;
-      state.images = action.payload;
+      const { payload } = action;
+      state.images = payload.sort((a: GalleryImage, b: GalleryImage) =>
+        a.createdAt.localeCompare(b.createdAt)
+      );
+      state.favouriteImages = payload.filter((image) => image.favorited);
     })
     .addCase(fetchImages.rejected, (state, action) => {
       state.imagesStatus = GalleryImagesStatus.FAILED;
@@ -87,6 +99,12 @@ export const getSelectedImage = (state: RootState): GalleryImage | null =>
 export const getSelectedImageId = (state: RootState): string =>
   state.gallery.selectedImageId;
 
+export const getSelectedTab = (state: RootState): GalleryTabEnum =>
+  state.gallery.selectedTab;
+
+export const getFavouriteImages = (state: RootState): GalleryImage[] =>
+  state.gallery.favouriteImages;
+
 // SETUP
 export const gallerySlice = createSlice({
   name: "gallery",
@@ -97,4 +115,4 @@ export const gallerySlice = createSlice({
 
 export default gallerySlice.reducer;
 
-export const { setSelectedImage } = gallerySlice.actions;
+export const { setSelectedImage, setSelectedTab } = gallerySlice.actions;
