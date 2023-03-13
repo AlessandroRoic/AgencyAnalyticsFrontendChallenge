@@ -75,7 +75,7 @@ const extraReducers = (
       state.imagesStatus = GalleryImagesStatus.FULLFILLED;
       const { payload } = action;
       state.images = payload.sort((a: GalleryImage, b: GalleryImage) =>
-        a.createdAt.localeCompare(b.createdAt)
+        b.createdAt.localeCompare(a.createdAt)
       );
       state.favouriteImages = payload.filter((image) => image.favorited);
     })
