@@ -9,7 +9,6 @@ export const ItemImg = styled.img.attrs(({ selected, isGrid }) => ({
   outline-offset: ${({ selected }) => selected && "2px"};
   border-radius: 10px;
   object-fit: cover;
-  margin-bottom: 5px;
 
   &:hover {
     outline: ${({ isGrid, theme }) => isGrid && `2px solid ${theme.softBlue}`};
@@ -46,4 +45,12 @@ export const ItemDd = styled.dd`
 export const ItemFigCaption = styled.figcaption.attrs(({ flex }) => ({ flex }))`
   display: ${({ flex }) => (flex ? "flex" : "")};
   justify-content: ${({ flex }) => (flex ? "space-between" : "")};
+`;
+
+export const ImageButton = styled.button`
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  border: 0;
+  margin-bottom: 5px;
 `;

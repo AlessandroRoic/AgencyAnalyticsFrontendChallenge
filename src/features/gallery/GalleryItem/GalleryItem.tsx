@@ -1,6 +1,7 @@
 import Heart from "../../../assets/Heart";
 import useByteParser from "../../../hooks/useByteParser";
 import {
+  ImageButton,
   ItemDd,
   ItemDl,
   ItemDt,
@@ -36,15 +37,16 @@ const GalleryItem = ({
 
   return (
     <ItemFigure maxWidth={width}>
-      <ItemImg
-        src={src}
-        alt={filename || "No description provided"}
-        height={height}
-        width={width}
-        onClick={onImageClick}
-        selected={selected}
-        isGrid={!onFavouriteClick}
-      />
+      <ImageButton onClick={onImageClick}>
+        <ItemImg
+          src={src}
+          alt={filename || "No description provided"}
+          height={height}
+          width={width}
+          selected={selected}
+          isGrid={!onFavouriteClick}
+        />
+      </ImageButton>
       <ItemFigCaption flex={!!onFavouriteClick}>
         <ItemDl>
           <ItemDt>{filename}</ItemDt>
