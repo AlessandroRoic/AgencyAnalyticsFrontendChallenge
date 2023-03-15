@@ -69,6 +69,15 @@ const reducers = {
   favouriteImage: (state: GalleryState, action: PayloadAction<string>) => {
     const { payload: id } = action;
     state.images = state.images.map((image) => mapFavouriteImage(image, id));
+    if (
+      state.selectedTab === GalleryTabEnum.FAVOURITE &&
+      state.selectedImage?.favorited
+    ) {
+      const favImages = state.images.filter((image) => image.favorited);
+      state.selectedImage = favImages[0];
+      state.selectedImageId = favImages[0].id;
+      return;
+    }
     state.selectedImage = {
       ...state.selectedImage,
       favorited: !state.selectedImage?.favorited,
