@@ -1,6 +1,6 @@
 ## AgencyAnalytics Front End Challenge
 
-Following the challenge instructions I build a gallery app using React.
+Following the challenge instructions I built a gallery app using React.
 
 Libraries used:
 
