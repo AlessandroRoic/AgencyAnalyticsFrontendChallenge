@@ -57,6 +57,12 @@ const reducers = {
   deleteImage: (state: GalleryState, action: PayloadAction<string>) => {
     const { payload: id } = action;
     state.images = state.images.filter((image) => checkImageById(image, id));
+    if (state.selectedTab === GalleryTabEnum.FAVOURITE) {
+      const favImages = state.images.filter((image) => image.favorited);
+      state.selectedImage = favImages[0];
+      state.selectedImageId = favImages[0].id;
+      return;
+    }
     state.selectedImage = state.images[0];
     state.selectedImageId = state.selectedImage.id;
   },
