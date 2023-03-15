@@ -6,6 +6,7 @@ import {
 } from "@reduxjs/toolkit";
 import { NoInfer } from "react-redux";
 import { RootState } from "../../app/store";
+import { checkImageById, mapFavouriteImage } from "../../utils/utils";
 import GalleryAPI from "./GalleryAPI";
 import { GalleryImage } from "./models/GalleryImage.interface";
 
@@ -19,7 +20,6 @@ export enum GalleryImagesStatus {
 export interface GalleryState {
   imagesStatus: GalleryImagesStatus;
   images: GalleryImage[];
-  favouriteImages: GalleryImage[];
   selectedImage: GalleryImage | null;
   selectedImageId: string;
   selectedTab: GalleryTabEnum;
@@ -33,7 +33,6 @@ export enum GalleryTabEnum {
 const initialState: GalleryState = {
   imagesStatus: GalleryImagesStatus.IDLE,
   images: [],
-  favouriteImages: [],
   selectedImage: null,
   selectedImageId: "",
   selectedTab: GalleryTabEnum.RECENT,
@@ -55,6 +54,20 @@ const reducers = {
   ) => {
     state.selectedTab = action.payload;
   },
+  deleteImage: (state: GalleryState, action: PayloadAction<string>) => {
+    const { payload: id } = action;
+    state.images = state.images.filter((image) => checkImageById(image, id));
+    state.selectedImage = state.images[0];
+    state.selectedImageId = state.selectedImage.id;
+  },
+  favouriteImage: (state: GalleryState, action: PayloadAction<string>) => {
+    const { payload: id } = action;
+    state.images = state.images.map((image) => mapFavouriteImage(image, id));
+    state.selectedImage = {
+      ...state.selectedImage,
+      favorited: !state.selectedImage?.favorited,
+    } as GalleryImage;
+  },
 };
 
 export const fetchImages = createAsyncThunk(
@@ -74,14 +87,17 @@ const extraReducers = (
     .addCase(fetchImages.fulfilled, (state, action) => {
       state.imagesStatus = GalleryImagesStatus.FULLFILLED;
       const { payload } = action;
-      state.images = payload.sort((a: GalleryImage, b: GalleryImage) =>
-        b.createdAt.localeCompare(a.createdAt)
+      const sortedImages = [...payload].sort(
+        (a: GalleryImage, b: GalleryImage) =>
+          b.createdAt.localeCompare(a.createdAt)
       );
-      state.favouriteImages = payload.filter((image) => image.favorited);
+      state.images = sortedImages;
+      state.selectedImage = sortedImages[0];
+      state.selectedImageId = sortedImages[0].id;
     })
     .addCase(fetchImages.rejected, (state, action) => {
       state.imagesStatus = GalleryImagesStatus.FAILED;
-      console.log(action.error.message);
+      throw new Error(action.error.message);
     });
 };
 
@@ -103,7 +119,7 @@ export const getSelectedTab = (state: RootState): GalleryTabEnum =>
   state.gallery.selectedTab;
 
 export const getFavouriteImages = (state: RootState): GalleryImage[] =>
-  state.gallery.favouriteImages;
+  state.gallery.images.filter((image) => image.favorited);
 
 // SETUP
 export const gallerySlice = createSlice({
@@ -115,4 +131,5 @@ export const gallerySlice = createSlice({
 
 export default gallerySlice.reducer;
 
-export const { setSelectedImage, setSelectedTab } = gallerySlice.actions;
+export const { setSelectedImage, setSelectedTab, deleteImage, favouriteImage } =
+  gallerySlice.actions;

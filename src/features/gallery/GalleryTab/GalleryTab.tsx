@@ -1,5 +1,5 @@
 import { GalleryTabEnum } from "../gallerySlice";
-import { TabButton, TabLi, TabUl } from "./GalleryTab.styles";
+import { TabButton, TabUl } from "./GalleryTab.styles";
 
 interface GalleryTabProps {
   selectedTab: GalleryTabEnum;
@@ -10,22 +10,22 @@ const GalleryTab = ({ selectedTab, onTabClick }: GalleryTabProps) => {
   return (
     <nav>
       <TabUl role="tablist">
-        <TabLi>
+        <li>
           <TabButton
             role="tab"
             onClick={() => onTabClick(GalleryTabEnum.RECENT)}
             aria-selected={selectedTab === GalleryTabEnum.RECENT}>
             Recently Added
           </TabButton>
-        </TabLi>
-        <TabLi>
+        </li>
+        <li>
           <TabButton
             role="tab"
             onClick={() => onTabClick(GalleryTabEnum.FAVOURITE)}
             aria-selected={selectedTab === GalleryTabEnum.FAVOURITE}>
             Favourite
           </TabButton>
-        </TabLi>
+        </li>
       </TabUl>
     </nav>
   );

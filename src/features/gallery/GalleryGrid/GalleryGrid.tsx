@@ -30,7 +30,6 @@ const GalleryGrid = ({ images }: GalleryGridProps) => {
           src={url}
           filename={filename}
           sizeInBytes={sizeInBytes}
-          description={description}
           selected={isImageSelected(id)}
           onImageClick={() => dispatch(setSelectedImage(images[index]))}
         />

@@ -7,9 +7,8 @@ export const TabUl = styled.ul`
   flex-wrap: wrap;
   justify-content: flex-start;
   padding: 0;
+  border-bottom: 1px solid ${({ theme }) => theme.lightGreyishBlue};
 `;
-
-export const TabLi = styled.li``;
 
 export const TabButton = styled.button`
   border: 0;
@@ -17,6 +16,7 @@ export const TabButton = styled.button`
   padding: 0;
   padding-bottom: 15px;
   font-weight: bold;
+  color: ${({ theme }) => theme.lightGrey};
 
   &[aria-selected="true"] {
     color: ${({ theme }) => theme.softBlue};

@@ -1,8 +1,10 @@
+import Heart from "../../../assets/Heart";
 import useByteParser from "../../../hooks/useByteParser";
 import {
   ItemDd,
   ItemDl,
   ItemDt,
+  ItemFigCaption,
   ItemFigure,
   ItemImg,
 } from "./GalleryItem.styles";
@@ -14,20 +16,21 @@ interface GalleryItemProps {
   favorited?: boolean;
   height?: number;
   width?: number;
-  description: string;
-  selected: boolean;
-  onImageClick: () => void;
+  selected?: boolean;
+  onImageClick?: () => void;
+  onFavouriteClick?: () => void;
 }
 
 const GalleryItem = ({
   src,
   filename,
   sizeInBytes,
-  description,
   onImageClick,
   selected,
+  favorited,
   height = 107,
   width = 160,
+  onFavouriteClick,
 }: GalleryItemProps) => {
   const { parsedBytes } = useByteParser(sizeInBytes);
 
@@ -35,18 +38,26 @@ const GalleryItem = ({
     <ItemFigure maxWidth={width}>
       <ItemImg
         src={src}
-        alt={description}
+        alt={filename || "No description provided"}
         height={height}
         width={width}
         onClick={onImageClick}
         selected={selected}
+        isGrid={!onFavouriteClick}
       />
-      <figcaption>
+      <ItemFigCaption flex={!!onFavouriteClick}>
         <ItemDl>
           <ItemDt>{filename}</ItemDt>
           <ItemDd>{parsedBytes}</ItemDd>
         </ItemDl>
-      </figcaption>
+        {onFavouriteClick && (
+          <Heart
+            fill={favorited ? "#d8e0e8" : "none"}
+            stroke="#d8e0e8"
+            onClick={onFavouriteClick}
+          />
+        )}
+      </ItemFigCaption>
     </ItemFigure>
   );
 };

@@ -1,10 +1,13 @@
-import ImageGallery from "./ImageGallery/ImageGallery";
+import { GalleryMain } from "./Gallery.styles";
+import ImageGallery from "./ImageGallery";
+import ImageInfo from "./ImageInfo";
 
 const Gallery = () => {
   return (
-    <main>
+    <GalleryMain>
       <ImageGallery />
-    </main>
+      <ImageInfo />
+    </GalleryMain>
   );
 };
 
